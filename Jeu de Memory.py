@@ -27,14 +27,35 @@ CACHE = True
 MONTRE = False
 
 plateau = {(x, y): 0 for x in range(4) for y in range(4)}  # dico
-#print(plateau[1, 2])  # col 1 (x=1), y = 2
+# print(plateau[1, 2])  # col 1 (x=1), y = 2
 
 cache_ou_montre = {(x, y): CACHE for x in range(4) for y in range(4)}
 
-def init_plateau():# remplit le plateau avec des paires et les cache
+
+def init_plateau():  # remplit le plateau avec des paires et les cache
+
+    dico = {
+
+    }
+
     for x in range(4):
         for y in range(4):
-            plateau[(x,y)] = randint(1,8)
+            plateau[(x, y)] = randint(1, 8)
+            valeur = plateau[(x, y)]
+            print(valeur)
+            if valeur not in dico.keys():
+                dico[valeur] = 0
+            dico[valeur] += 1
+
+            while dico[valeur]==3:
+                print(dico[valeur],1)
+                dico[valeur]-=1
+                print(dico[valeur],2)
+            plateau[(x, y)] = randint(1, 8)
+            valeur = plateau[(x, y)]
+            dico[valeur] += 1
+
+    print(dico)
 
     return plateau
 
@@ -43,13 +64,13 @@ def affiche_plateau():  # affiche le plateau avec des '*' pour les cartes caché
     for x in range(4):
         for y in range(4):
             if cache_ou_montre:
-                plateau[(x,y)] ='*'
+                plateau[(x, y)] = '*'
     return plateau
 
-def demande_joueur(): # demande au joueur une colonne et une ligne
+
+def demande_joueur():  # demande au joueur une colonne et une ligne
     proposition_1 = int(input("Voulez-vous voir quelle carte? Donnez-moi la colonne:"))
     proposition_2 = int(input("Donnez-moi aussi la ligne correspondante:"))
-    return s
-plateau_1 =affiche_plateau()
-print(plateau_1)
-print(demande_joueur())
+
+
+print(init_plateau())
