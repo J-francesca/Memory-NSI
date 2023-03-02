@@ -21,7 +21,7 @@
 plateau = [[0 for x in range(4)] for y in range(4)] # liste de listes
 print(plateau[2][1]) # ligne 2 col 1 ... Pfffff
 """
-from random import randint
+from random import sample, shuffle
 
 CACHE = True
 MONTRE = False
@@ -32,45 +32,82 @@ plateau = {(x, y): 0 for x in range(4) for y in range(4)}  # dico
 cache_ou_montre = {(x, y): CACHE for x in range(4) for y in range(4)}
 
 
+def trouve_places_des_paires():
+    toutes_les_cases = [(x, y) for x in range(4) for y in range(4)]
+    cases_de_premier_elt_de_paire = sample(toutes_les_cases, 8)
+    for case in cases_de_premier_elt_de_paire:
+        toutes_les_cases.remove(case)
+    cases_restantes = toutes_les_cases
+    shuffle(cases_restantes)
+    return [(cases_de_premier_elt_de_paire[i], cases_restantes[i]) for i in range(8)]
+
+
 def init_plateau():  # remplit le plateau avec des paires et les cache
 
-    dico = {
+    paires = trouve_places_des_paires()
 
-    }
+    i = 1
+    for x in paires:
+        plateau[x[0]] = i
+        plateau[x[1]] = i
+        i += 1
 
-    for x in range(4):
-        for y in range(4):
-            plateau[(x, y)] = randint(1, 8)
-            valeur = plateau[(x, y)]
-            print(valeur)
-            if valeur not in dico.keys():
-                dico[valeur] = 0
-            dico[valeur] += 1
+    cache_ou_montre = {(x, y): CACHE for x in range(4) for y in range(4)}
 
-            while dico[valeur]==3:
-                print(dico[valeur],1)
-                dico[valeur]-=1
-                print(dico[valeur],2)
-            plateau[(x, y)] = randint(1, 8)
-            valeur = plateau[(x, y)]
-            dico[valeur] += 1
-
-    print(dico)
-
-    return plateau
+    return plateau, cache_ou_montre
 
 
 def affiche_plateau():  # affiche le plateau avec des '*' pour les cartes cachées
+
     for x in range(4):
         for y in range(4):
-            if cache_ou_montre:
+            if cache_ou_montre[(x, y)]:
                 plateau[(x, y)] = '*'
+            else:
+                plateau[(x, y)]
+
     return plateau
 
 
 def demande_joueur():  # demande au joueur une colonne et une ligne
-    proposition_1 = int(input("Voulez-vous voir quelle carte? Donnez-moi la colonne:"))
-    proposition_2 = int(input("Donnez-moi aussi la ligne correspondante:"))
+    taille = [x for x in range(8)]
+    proposition_1 = -1
+    proposition_2 = -1
+    proposition_3 = -1
+    proposition_4 = -1
+    while proposition_1 not in taille:
+        proposition_1 = int(input("Voulez-vous choisir quelle carte? Donnez-moi la position de la colonne:"))
+    while proposition_2 not in taille:
+        proposition_2 = int(input("Donnez-moi aussi la ligne correspondante:"))
+    print("Donnez-moi également la position de la deuxième carte.")
+    while proposition_3 not in taille :
+        proposition_3 = int(input("La colonne:"))
+    while proposition_4 not in taille:
+        proposition_4 = int(input("Quelle ligne?"))
+    while proposition_1 == proposition_3 and proposition_2 == proposition_4:
+        print("Vous avez saisir la même carte.")
+
+    return proposition_1, proposition_2, proposition_3, proposition_4
 
 
-print(init_plateau())
+def jouer():
+    cache_ou_montre[(propositions_1[0], propositions_1
+    [1])] = False
+
+    cache_ou_montre[(propositions_2[0], propositions_2
+    [1])] = False
+
+
+paires = trouve_places_des_paires()
+i = 1
+for x in paires:
+    #    print(f"il y aura une paire aux cases{x[0]} et {x[1]}.")
+    plateau[x[0]] = i
+    plateau[x[1]] = i
+    i += 1
+
+s = demande_joueur()
+n = jouer()
+affiche = affiche_plateau()
+
+print(plateau)
