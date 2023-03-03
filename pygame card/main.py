@@ -9,9 +9,10 @@ FRONT_CARD_IMG = pygame.image.load("front.png")
 CARD_WIDTH = FRONT_CARD_IMG.get_width()
 CARD_HEIGHT = FRONT_CARD_IMG.get_height()
 
+
 SCREEN_WIDTH = CARD_WIDTH + 20
 SCREEN_HEIGHT = CARD_HEIGHT + 20
-SPEED = 10
+SPEED = 8
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 BG_IMAGE = pygame.transform.smoothscale(pygame.image.load("bg.png"),(SCREEN_WIDTH,SCREEN_HEIGHT))

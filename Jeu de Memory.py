@@ -28,7 +28,6 @@ MONTRE = False
 
 plateau = {(x, y): 0 for x in range(4) for y in range(4)}  # dico
 # print(plateau[1, 2])  # col 1 (x=1), y = 2
-
 cache_ou_montre = {(x, y): CACHE for x in range(4) for y in range(4)}
 
 
@@ -57,18 +56,6 @@ def init_plateau():  # remplit le plateau avec des paires et les cache
     return plateau, cache_ou_montre
 
 
-def affiche_plateau():  # affiche le plateau avec des '*' pour les cartes cachées
-
-    for x in range(4):
-        for y in range(4):
-            if cache_ou_montre[(x, y)]:
-                plateau[(x, y)] = '*'
-            else:
-                plateau[(x, y)]
-
-    return plateau
-
-
 def demande_joueur():  # demande au joueur une colonne et une ligne
     taille = [x for x in range(8)]
     proposition_1 = -1
@@ -80,34 +67,52 @@ def demande_joueur():  # demande au joueur une colonne et une ligne
     while proposition_2 not in taille:
         proposition_2 = int(input("Donnez-moi aussi la ligne correspondante:"))
     print("Donnez-moi également la position de la deuxième carte.")
-    while proposition_3 not in taille :
+    while proposition_3 not in taille:
         proposition_3 = int(input("La colonne:"))
     while proposition_4 not in taille:
         proposition_4 = int(input("Quelle ligne?"))
-    while proposition_1 == proposition_3 and proposition_2 == proposition_4:
-        print("Vous avez saisir la même carte.")
 
     return proposition_1, proposition_2, proposition_3, proposition_4
 
 
 def jouer():
-    cache_ou_montre[(propositions_1[0], propositions_1
-    [1])] = False
+    reponse_1, reponse_2, reponse_3, reponse_4 = demande_joueur()
+    plateau = init_plateau()
 
-    cache_ou_montre[(propositions_2[0], propositions_2
-    [1])] = False
+    plateau[1][reponse_1, reponse_2] = False
+    plateau[1][reponse_3, reponse_4] = False
+
+    choix_1 = plateau[0][reponse_1, reponse_2]
+    choix_2 = plateau[0][reponse_3, reponse_4]
+    return choix_1, choix_2, plateau
 
 
-paires = trouve_places_des_paires()
-i = 1
-for x in paires:
-    #    print(f"il y aura une paire aux cases{x[0]} et {x[1]}.")
-    plateau[x[0]] = i
-    plateau[x[1]] = i
-    i += 1
+def score():
+    score = 0
+    choix = jouer()
+    if choix[0] == choix[1]:
+        score += 2
+        print("Vous avez trouvé les mêmes cartes.")
+    else:
+        score -= 1
+        print("Vous n'avez pas trouvé les mêmes cartes. Réessayez!")
 
-s = demande_joueur()
-n = jouer()
-affiche = affiche_plateau()
+    while score < 0:
+        score = 0
+
+
+def affiche_plateau():  # affiche le plateau avec des '*' pour les cartes cachées
+    reponse = jouer()
+    for x in range(4):
+        for y in range(4):
+            if reponse[2][1][x, y]:
+                reponse[2][0][x, y] = '*'
+
+
+trouve_places_des_paires()
+init_plateau()
+
+score()
+affiche_plateau()
 
 print(plateau)
