@@ -1,4 +1,4 @@
-# 1.Le joueur choisit le nombre de carte (le nombre de cartes possible: 16,24,32,48) et le nombre de joueurs(maximum 4);
+# 1.Le joueur choisit le nombre de carte (le nombre de cartes possibles: 16,24,32,48) et le nombre de joueurs(maximum 4);
 # 2.Toutes les cartes sont cachées, il y a toujours des paires de cartes qui ont le chiffre identique ou la forme identique;
 # 3.Le joueur va choisir deux cartes pour voir si deux cartes sont identiques ou pas ;
 # 4.
@@ -52,7 +52,7 @@ def init_plateau():  # remplit le plateau avec des paires et les cache
     return plateau, cache_ou_montre
 
 
-def demande_joueur():  # demande au joueur une colonne et une ligne
+def demande_joueur():  # demande au joueur une colonne et une ligne (position de la carte)
     taille = [x for x in range(8)]
     proposition_1 = -1
     proposition_2 = -1
@@ -64,53 +64,70 @@ def demande_joueur():  # demande au joueur une colonne et une ligne
     return proposition_1, proposition_2
 
 
-def affiche_plateau():  # affiche le plateau avec des '*' pour les cartes cachées
-    plateau, cache = init_plateau()
+def affiche_plateau(plateau, cache): # affiche le plateau
     for x in range(4):
         for y in range(4):
-            if cache[x, y]:
-                plateau[x, y] = '*'
-    return plateau, cache
-
-
-def affiche_vraiment_le_plateau(plateau, cache):
-    for x in range(4):
-        for y in range(4):
-            if cache[x, y]!=False:
+            if cache[x, y] is not False:
                 print("*", end=" ")
+            elif cache[x, y] == None:
+                print(" ", end=" ")
             else:
-                print(plateau[x,y],end=" ")
+                print(plateau[x, y], end=" ")
         print()
 
 
-
 def jouer():
-    plateau, cases_cachees = affiche_plateau()
-    affiche_vraiment_le_plateau(plateau, cases_cachees)
-    reponse_1, reponse_2 = demande_joueur()
-    cases_cachees[reponse_1, reponse_2] = False
-    affiche_vraiment_le_plateau(plateau, cases_cachees)
+    plateau, cases_cachees = init_plateau()
+    while True in cases_cachees.values():
+        affiche_plateau(plateau, cases_cachees)
+        print()
+        reponse_1, reponse_2 = demande_joueur()
+        print()
+        cases_cachees[reponse_1, reponse_2] = False
+        affiche_plateau(plateau, cases_cachees)
 
-    print("Donnez-moi également la position de la deuxième carte.")
+        print()
+        print("Donnez-moi également la position de la deuxième carte.")
+        print()
 
-    reponse_3, reponse_4 = demande_joueur()
-    plateau[1][reponse_3, reponse_4] = False
-    print(plateau[0])
+        reponse_3, reponse_4 = demande_joueur()
+        while reponse_1 == reponse_3 and reponse_2 == reponse_4:
+            print("Vous avez saisi la même carte.")
+            reponse_3, reponse_4 = demande_joueur()
+        cases_cachees[reponse_3, reponse_4] = False
+        affiche_plateau(plateau, cases_cachees)
 
-    choix_1 = plateau[0][reponse_1, reponse_2]
-    choix_2 = plateau[0][reponse_3, reponse_4]
-    return choix_1, choix_2, plateau
+        choix_1 = plateau[reponse_1, reponse_2]
+        choix_2 = plateau[reponse_3, reponse_4]
+        score(choix_1, choix_2)
+
+        print()
+        if choix_1 != choix_2:
+            print("Vous n'avez pas trouvé les mêmes cartes.")
+            print()
+            cases_cachees[reponse_1, reponse_2] = True
+            cases_cachees[reponse_3, reponse_4] = True
+            affiche_plateau(plateau, cases_cachees)
+            print()
+        else:
+            print("Vous avez trouvé les mêmes cartes.")
+            print()
+            cases_cachees[reponse_1, reponse_2] = None
+            cases_cachees[reponse_3, reponse_4] = None
+            affiche_plateau(plateau, cases_cachees)
+            print()
 
 
-def score():
+
+def score(choix_1, choix_2): # compte le nombre de points que le joueur a gagné
     point = 0
-    choix = jouer()
-    if choix[0] == choix[1]:
+    if choix_1 == choix_2:
         point += 2
-        print("Vous avez trouvé les mêmes cartes.")
+        print(choix_1, choix_2)
+        print("Bravo!")
     else:
         point -= 1
-        print("Vous n'avez pas trouvé les mêmes cartes. Réessayez!")
+        print("Réessayez!")
 
     while point < 0:
         point = 0
@@ -118,4 +135,4 @@ def score():
     return print(f"Le joueur a gagné", point, "points.") if point > 0 else print("Vous n'avez gagné aucun point.")
 
 
-score()
+jouer()
