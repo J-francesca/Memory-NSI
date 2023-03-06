@@ -64,7 +64,7 @@ def demande_joueur():  # demande au joueur une colonne et une ligne (position de
     return proposition_1, proposition_2
 
 
-def affiche_plateau(plateau, cache): # affiche le plateau
+def affiche_plateau(plateau, cache):  # affiche le plateau
     for x in range(4):
         for y in range(4):
             if cache[x, y] is not False:
@@ -107,19 +107,14 @@ def jouer():
             print()
             cases_cachees[reponse_1, reponse_2] = True
             cases_cachees[reponse_3, reponse_4] = True
-            affiche_plateau(plateau, cases_cachees)
-            print()
         else:
             print("Vous avez trouvé les mêmes cartes.")
             print()
             cases_cachees[reponse_1, reponse_2] = None
             cases_cachees[reponse_3, reponse_4] = None
-            affiche_plateau(plateau, cases_cachees)
-            print()
 
 
-
-def score(choix_1, choix_2): # compte le nombre de points que le joueur a gagné
+def score(choix_1, choix_2):  # compte le nombre de points que le joueur a gagné
     point = 0
     if choix_1 == choix_2:
         point += 2
